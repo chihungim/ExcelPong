@@ -1,2 +1,4 @@
 # ExcelPong
-pong made from vba and excel chart
+
+Pong made of Visual Basic for Application and Excel Chart
+![Preview](preview.gif)
