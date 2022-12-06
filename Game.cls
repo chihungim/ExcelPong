@@ -16,16 +16,22 @@ Private Sub CommandButton1_Click()
 End Sub
 
 Sub StartRound()
+    Call Worksheet_Activate
     Call SetScoreBoard
+    
     [ballx] = 0: [bally] = 0
     [balldirx] = Array(1, -1)(Int(WorksheetFunction.RandBetween(0, 1))): [balldiry] = Array(1, -1)(Int(WorksheetFunction.RandBetween(0, 1)))
     Call ResetPaddlePos
     Call SetScoreBoard
+    t = Timer
+    
     Do While isGameRunning
-        Call MoveBall
-        Call ProcessInput
-        Call CheckBallPosition
-        DoEvents
+        If Timer - t >= 0.001 Then
+            Call MoveBall
+            Call ProcessInput
+            Call CheckBallPosition
+            DoEvents
+        End If
     Loop
 End Sub
 
