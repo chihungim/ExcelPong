@@ -117,11 +117,17 @@ End Sub
 Sub ProcessInput()
     If GetAsyncKeyState(vbKeyPageUp) Then
         [player2Y] = WorksheetFunction.Min([player2Y] + 1, 10)
-    ElseIf GetAsyncKeyState(vbKeyPageDown) Then
+    End If
+    
+    If GetAsyncKeyState(vbKeyPageDown) Then
         [player2Y] = WorksheetFunction.Max([player2Y] - 1, -50)
-    ElseIf GetAsyncKeyState(vbKeyUp) Then
+    End If
+    
+    If GetAsyncKeyState(vbKeyUp) Then
         [player1Y] = WorksheetFunction.Min([player1Y] + 1, 10)
-    ElseIf GetAsyncKeyState(vbKeyDown) Then
+    End If
+    
+    If GetAsyncKeyState(vbKeyDown) Then
         [player1Y] = WorksheetFunction.Max([player1Y] - 1, -50)
     End If
 End Sub
