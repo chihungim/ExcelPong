@@ -36,44 +36,42 @@ Sub StartRound()
 End Sub
 
 Sub ResetPaddlePos()
-    [k2] = -40:   [L2] = -20
+    [K2] = -40:   [l2] = -20
     [N2] = 40:   [O2] = -20
 End Sub
 
 
 Sub CheckBallPosition()
-    If [ballx] < 0 Then
-        If [ballx] < [K4] And Not ([bally] >= [L5] And [bally] <= [L4]) Then
-            isGameRunning = False
-            [player2Score] = [player2Score] + 1
-            Call SetScoreBoard
-        End If
+    If Abs([ballx]) > Abs([K2]) Or Abs([ballx]) > Abs([N2]) Then
+        isGameRunning = False
+        [player2Score] = [player2Score] + 1
+        Call SetScoreBoard
     End If
-    
-    If [ballx] > 0 Then
-        If [ballx] > [N4] And Not ([bally] >= [O5] And [bally] <= [O4]) Then
-            isGameRunning = False
-            [player1Score] = [player1Score] + 1
-            Call SetScoreBoard
-        End If
-    End If
-    
-
 End Sub
 
 Sub SetScoreBoard()
     On Error GoTo e
     For Each shp In Sheet4.Shapes
-        If shp.Name Like "_*" Then shp.Delete
+        If shp.Name Like "d*" Then shp.Delete
     Next
-    Application.CutCopyMode = True
-    Sheet3.Shapes("_" & [player1Score]).Copy
-    Sheet4.Paste Sheet4.Range("E2")
+    Set s1 = Shapes("_" & [player1Score]).Duplicate
+    Set s2 = Shapes("_" & [player2Score]).Duplicate
     
-    Sheet3.Shapes("_" & [player2Score]).Copy
-    Sheet4.Paste Sheet4.Range("I2")
-    Application.CutCopyMode = False
-    Sheet4.Range("N11").Select
+    s1.Name = "d1"
+    s2.Name = "d2"
+    
+    s1.Visible = True: s2.Visible = True
+    
+    With Sheet4.Range("E2")
+        s1.Top = .Top
+        s1.Left = .Left
+    End With
+    
+    With Sheet4.Range("I2")
+        s2.Top = .Top
+        s2.Left = .Left
+    End With
+    
     Exit Sub
 e:
     Call ClearScore
@@ -83,6 +81,11 @@ Sub ClearScore()
     [player1Score] = 0: [player2Score] = 0
     Call SetScoreBoard
 End Sub
+
+
+Function CheckCollision(l, r, t, b)
+    CheckCollision = [ballx] <= r And [ballx] >= l And [bally] <= t And [bally] >= b
+End Function
 
 Sub MoveBall()
     If [bally] <= -50 Or [bally] >= 50 Then
@@ -96,18 +99,14 @@ Sub MoveBall()
     
     '' check player1
     
-    If [ballx] < 0 Then
-        If [ballx] <= [K4] And [bally] >= [L5] And [bally] <= [L4] Then
-            [balldirx] = [balldirx] * -1
-        End If
+    If CheckCollision([K2], [k4], [l3], [l2]) Then
+        [balldirx] = [balldirx] * -1
     End If
     
-    
     '' check player2
-    If [ballx] > 0 Then
-        If [ballx] >= [N4] And [bally] >= [O5] And [bally] <= [O4] Then
-            [balldirx] = [balldirx] * -1
-        End If
+    
+    If CheckCollision([N4], [N2], [O3], [O2]) Then
+        [balldirx] = [balldirx] * -1
     End If
     
     [bally] = [bally] + [balldiry]
